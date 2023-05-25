@@ -1,9 +1,9 @@
-<div style="display: flex; justify-content: center; align-items: center;">
+<div align="center">
   <img src="https://res.cloudinary.com/canonical/image/fetch/f_auto,q_auto,fl_sanitize,w_60,h_60/https://dashboard.snapcraft.io/site_media/appmedia/2019/05/multipass.png" width="60" height="60" />
-  <span style="font-size:3rem;margin: 0 1rem;">+</span>
+  <font size="30">+</font>
   <img src="https://res.cloudinary.com/canonical/image/fetch/f_auto,q_auto,fl_sanitize,w_60,h_60/https://dashboard.snapcraft.io/site_media/appmedia/2018/11/image-juju-256.svg.png" width="60" height="60" />
-  <span style="font-size:3rem;margin: 0 1rem;">=</span>
-  <span style="font-size:3rem;">❤️️</span>
+  <font size="30">=</font>
+  <font size="30">❤️</font>
 </div>
 
 <p align="center">
@@ -29,4 +29,3 @@ options:
 -c     Juju Channel. [default: latest/beta]
 -d     Dev - install and run dotrun   
 ```
-
