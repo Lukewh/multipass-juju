@@ -1,9 +1,6 @@
 <div align="center">
   <img src="https://res.cloudinary.com/canonical/image/fetch/f_auto,q_auto,fl_sanitize,w_60,h_60/https://dashboard.snapcraft.io/site_media/appmedia/2019/05/multipass.png" width="60" height="60" />
-  <font size="30">+</font>
   <img src="https://res.cloudinary.com/canonical/image/fetch/f_auto,q_auto,fl_sanitize,w_60,h_60/https://dashboard.snapcraft.io/site_media/appmedia/2018/11/image-juju-256.svg.png" width="60" height="60" />
-  <font size="30">=</font>
-  <font size="30">❤️</font>
 </div>
 
 <p align="center">
@@ -27,5 +24,5 @@ options:
 -h     Show this help.
 -n     Name of the multipass instance. [default: juju]
 -c     Juju Channel. [default: latest/beta]
--d     Dev - install and run dotrun   
+-d     Dev - install and run dotrun
 ```
