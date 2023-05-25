@@ -183,7 +183,7 @@ help() {
     echo "-h     Show this help."
     echo "-n     Name of the multipass instance. [default: juju]"
     echo "-c     Juju Channel. [default: latest/beta]"
-    echo "-d     Dev - install and run dotrun"
+    echo "-d     Dev - install and run dotrun. EXPERIMENTAL - NOT RECOMMENDED"
     echo ""
 }
 

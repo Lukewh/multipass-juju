@@ -24,5 +24,5 @@ options:
 -h     Show this help.
 -n     Name of the multipass instance. [default: juju]
 -c     Juju Channel. [default: latest/beta]
--d     Dev - install and run dotrun
+-d     Dev - install and run dotrun. EXPERIMENTAL - NOT RECOMMENDED
 ```
