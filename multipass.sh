@@ -105,9 +105,9 @@ function step7() {
     arm64=$2
     multipass exec $name -- juju add-model test
     if [[ $arm64 -eq 1 ]]; then
-        multipass exec $name -- juju deploy postgresql --constraints="arch=arm64"
+        multipass exec $name -- juju deploy postgresql --channel 14/stable --constraints="arch=arm64"
     else
-        multipass exec $name -- juju deploy postgresql
+        multipass exec $name -- juju deploy postgresql --channel 14/stable
     fi
 }
 
