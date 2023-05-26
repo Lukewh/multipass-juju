@@ -85,6 +85,7 @@ function step6() {
     cecho "6. Set up port forwarding"
     cecho "---------------------------------------------"
     name=$1
+    dashboard=$2
     output=$(multipass exec juju -- lxc ls)
     lines=(${output//$'\n'/ })
 
@@ -94,7 +95,9 @@ function step6() {
     machine_names=(${machines//$'\n'/ })
 
     multipass exec $name -- lxc config device add "${machine_names[0]}" portforward17070 proxy listen=tcp:0.0.0.0:17070 connect=tcp:127.0.0.1:17070
-    multipass exec $name -- lxc config device add "${machine_names[1]}" portforward8080 proxy listen=tcp:0.0.0.0:8080 connect=tcp:127.0.0.1:8080
+    if [[ $dashboard -eq 1 ]]; then
+        multipass exec $name -- lxc config device add "${machine_names[1]}" portforward8080 proxy listen=tcp:0.0.0.0:8080 connect=tcp:127.0.0.1:8080
+    fi
 }
 
 function step7() {
@@ -116,6 +119,7 @@ function step8() {
     cecho "8. Finished"
     cecho "---------------------------------------------"
     name=$1
+    dashboard=$2
     output=$(multipass info $name)
     lines=(${output//$'\n'/ })
 
@@ -131,7 +135,9 @@ function step8() {
     echo "If you are running the dashboard locally update config.local.js with the following:"
     echo -e "\tcontrollerAPIEndpoint: \"wss://${ip_address}:17070\""
     echo ""
-    echo "When the dashboard is ready it will be available at: http://${ip_address}:8080"
+    if [[ $dashboard -eq 1 ]]; then
+        echo "When the dashboard is ready it will be available at: http://${ip_address}:8080"
+    fi
 }
 
 function installAndRunDotRun() {
@@ -164,12 +170,19 @@ function setup() {
     channel=$2
     arm64=$3
     testmodel=$4
+    dashboard=$5
     step1 $name
     step2 $name
     step3 $name
     step4 $name $channel $arm64
-    step5 $name
-    step6 $name
+    if [[ $dashboard -eq 1 ]]; then
+        step5 $name
+    else
+        cecho "---------------------------------------------"
+        cecho "Skipping 5. Set up the dashboard"
+        cecho "---------------------------------------------"
+    fi
+    step6 $name $dashboard
     if [[ $testmodel -eq 1 ]]; then
         step7 $name $arm64
     else
@@ -190,7 +203,7 @@ help() {
     echo "-n     Name of the multipass instance. [default: juju]"
     echo "-c     Juju Channel. [default: latest/beta]"
     echo "-t     Deploy postgreqsl to a model named \"test\"."
-    echo "-d     Dev - install and run dotrun. EXPERIMENTAL - NOT RECOMMENDED"
+    echo "-d     Set up the dashboard charm."
     echo ""
 }
 
@@ -221,6 +234,7 @@ fi
 
 dotrun=0
 testmodel=0
+dashboard=0
 
 ############################################################
 # Process the input options. Add options as needed.        #
@@ -237,8 +251,8 @@ while getopts ":hn:c:dt" option; do
             name=$OPTARG;;
         t) # test model
             testmodel=1;;
-        d) # dotrun
-            dotrun=1;;
+        d) # dashboard
+            dashboard=1;;
         \?) # Invalid option
             echo "Error: Invalid option"
             exit;;
@@ -249,14 +263,15 @@ function main() {
     name=$1
     channel=$2
     arm64=$3
-    dotrun=$4
-    testmodel=$5
+    testmodel=$4
+    dashboard=$5
+    dotrun=$6
 
     multipass_instance=$(multipass info $name && echo 1 || echo 0)
 
     if [[ $multipass_instance -eq 0  ]]; then
         cecho "Creating instance"
-        setup $name $channel $arm64 $testmodel
+        setup $name $channel $arm64 $testmodel $dashboard
     fi
 
     if [[ $dotrun -eq 1 ]]; then
@@ -287,6 +302,11 @@ if [[ $testmodel -eq 1 ]]; then
 else
     cecho "\tTest Model: No"
 fi
+if [[ $dashboard -eq 1 ]]; then
+    cecho "\tDashboard: Yes"
+else
+    cecho "\tDashboard: No"
+fi
 echo
-yes_or_no "Does this look correct?" && main $name $channel $arm64 $testmodel
+yes_or_no "Does this look correct?" && main $name $channel $arm64 $testmodel $dashboard $dotrun
 
