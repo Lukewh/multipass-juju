@@ -163,14 +163,18 @@ function setup() {
     name=$1
     channel=$2
     arm64=$3
-    dotrun=$4
+    testmodel=$4
     step1 $name
     step2 $name
     step3 $name
     step4 $name $channel $arm64
     step5 $name
     step6 $name
-    step7 $name $arm64
+    if [[ $testmodel -eq 1 ]]; then
+        step7 $name $arm64
+    else
+        cecho "Skipping 7. Deploy postgresql"
+    fi
     step8 $name
 }
 
@@ -183,6 +187,7 @@ help() {
     echo "-h     Show this help."
     echo "-n     Name of the multipass instance. [default: juju]"
     echo "-c     Juju Channel. [default: latest/beta]"
+    echo "-t     Deploy postgreqsl to a model named \"test\"."
     echo "-d     Dev - install and run dotrun. EXPERIMENTAL - NOT RECOMMENDED"
     echo ""
 }
@@ -213,12 +218,13 @@ if [[ "$(uname -m)" == "arm64" ]]; then
 fi
 
 dotrun=0
+testmodel=0
 
 ############################################################
 # Process the input options. Add options as needed.        #
 ############################################################
 # Get the options
-while getopts ":hn:c:d" option; do
+while getopts ":hn:c:dt" option; do
     case $option in
         h) # display help
             help
@@ -227,6 +233,8 @@ while getopts ":hn:c:d" option; do
             channel=$OPTARG;;
         n) # Enter a name
             name=$OPTARG;;
+        t) # test model
+            testmodel=1;;
         d) # dotrun
             dotrun=1;;
         \?) # Invalid option
@@ -240,12 +248,13 @@ function main() {
     channel=$2
     arm64=$3
     dotrun=$4
+    testmodel=$5
 
     multipass_instance=$(multipass info $name && echo 1 || echo 0)
 
     if [[ $multipass_instance -eq 0  ]]; then
         cecho "Creating instance"
-        setup $name $channel $arm64
+        setup $name $channel $arm64 $testmodel
     fi
 
     if [[ $dotrun -eq 1 ]]; then
@@ -271,6 +280,11 @@ if [[ $dotrun -eq 1 ]]; then
 else
     cecho "\tDotrun: No"
 fi
+if [[ $testmodel -eq 1 ]]; then
+    cecho "\tTest Model: Yes"
+else
+    cecho "\tTest Model: No"
+fi
 echo
-yes_or_no "Does this look correct?" && main $name $channel $arm64
+yes_or_no "Does this look correct?" && main $name $channel $arm64 $testmodel
 
