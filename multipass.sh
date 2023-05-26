@@ -173,7 +173,9 @@ function setup() {
     if [[ $testmodel -eq 1 ]]; then
         step7 $name $arm64
     else
+        cecho "---------------------------------------------"
         cecho "Skipping 7. Deploy postgresql"
+        cecho "---------------------------------------------"
     fi
     step8 $name
 }
