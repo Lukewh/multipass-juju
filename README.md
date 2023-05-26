@@ -25,5 +25,5 @@ options:
 -n     Name of the multipass instance. [default: juju]
 -c     Juju Channel. [default: latest/beta]
 -t     Deploy postgreqsl to a model named "test".
--d     Dev - install and run dotrun. EXPERIMENTAL - NOT RECOMMENDED
+-d     Set up the dashboard charm.
 ```
