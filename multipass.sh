@@ -130,7 +130,8 @@ function step8() {
 
     multipass exec $name -- juju switch controller
 
-    echo "Visit: https://${ip_address}:17070 to accept the certificate."
+    echo
+    cecho "Visit: https://${ip_address}:17070 to accept the certificate."
     echo ""
     echo "If you are running the dashboard locally update config.local.js with the following:"
     echo -e "\tcontrollerAPIEndpoint: \"wss://${ip_address}:17070\""
@@ -138,6 +139,12 @@ function step8() {
     if [[ $dashboard -eq 1 ]]; then
         echo "When the dashboard is ready it will be available at: http://${ip_address}:8080"
     fi
+    echo
+    echo "You can ssh into the instance with:"
+    cecho "\tmultipass shell ${name}"
+    echo
+    echo "From there you can deploy charms and bundles."
+    echo
 }
 
 function installAndRunDotRun() {
